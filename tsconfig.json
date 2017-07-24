@@ -1,0 +1,32 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "allowJs": true,
+        "allowSyntheticDefaultImports": false, // This must be false for the React imports to work at both build and run times.
+        "alwaysStrict": true,
+        "inlineSources": false,
+        "lib": [
+            "dom",
+            "es2015",
+            "es2016"
+        ],
+        "module": "es2015",
+        "moduleResolution": "node",
+        "noEmitOnError": false,
+        "noImplicitAny": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": false,
+        "preserveConstEnums": true,
+        "removeComments": false,
+        "sourceMap": true,
+        "suppressImplicitAnyIndexErrors": false,
+        "target": "es2017",
+        "types":["node"]
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "include": [
+        "src/**/*.ts"
+    ]
+}
