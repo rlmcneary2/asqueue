@@ -9,12 +9,6 @@ const _SOURCE_DIR = "src";
 const _OUTPUT_DIR = "dist";
 
 
-const babelOptions = {
-    plugins: ["transform-runtime"],
-    presets: ["es2015", "es2016", "es2017"],
-    retainLines: true,
-};
-
 /**
  * @module
  * This is a webpack2 configuration file.
@@ -25,7 +19,7 @@ module.exports = {
         inline: true
     },
     // devtool: "source-maps",
-    entry: `./index.ts`,
+    entry: path.resolve("./index.ts"),
     module: {
         rules: [
             {
@@ -37,27 +31,15 @@ module.exports = {
                         options: {
                             useBabel: true,
                             useCache: true,
-                            // babelCore: path.resolve(__dirname, "node_modules", "babel-runtime"),
                             babelOptions: {
-                                plugins: ["transform-runtime"],
+                                plugins: [["transform-runtime", { helpers: false, moduleName: "babel-runtime" }]],
                                 presets: ["es2015", "es2016", "es2017"],
                                 retainLines: true,
                             }
                         }
                     }
                 ]
-            },
-            {
-                test: /\.js$/,
-                exclude: /(node_modules)/,
-                use: [
-                    {
-                        loader: "babel-loader",
-                        options: babelOptions
-                    }
-                ]
-            }
-        ]
+            }]
     },
     output: {
         filename: "index.js",
@@ -68,7 +50,7 @@ module.exports = {
         new webpack.LoaderOptionsPlugin({ debug: true })
     ],
     resolve: {
-        extensions: [".ts"]
+        extensions: [".js", ".ts"] // Must include .js here to resolve files in node_modules.
     },
     target: "web"
 };
