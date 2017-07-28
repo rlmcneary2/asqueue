@@ -1,7 +1,7 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "allowJs": true,
+        "allowJs": false,
         "allowSyntheticDefaultImports": false, // This must be false for the React imports to work at both build and run times.
         "alwaysStrict": true,
         "inlineSources": false,

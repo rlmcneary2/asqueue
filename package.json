@@ -2,8 +2,12 @@
   "name": "asqueue",
   "version": "0.0.1",
   "description": "An async queue. Pronounced 'askew.'",
+  "engines": {
+    "node": ">=7.6.0"
+  },
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "test": "npm run build && mocha --reporter spec"
   },
   "repository": {
     "type": "git",
@@ -34,5 +38,7 @@
     "webpack": "^2.4.1",
     "webpack-comment-remover-loader": "0.0.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "babel-runtime": "^6.25.0"
+  }
 }
