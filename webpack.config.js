@@ -24,7 +24,7 @@ module.exports = {
         contentBase: path.resolve(__dirname, _OUTPUT_DIR),
         inline: true
     },
-    devtool: "source-maps",
+    // devtool: "source-maps",
     entry: `./index.ts`,
     module: {
         rules: [

@@ -5,16 +5,16 @@ import { Task, QueueTask } from "./interfaces";
 class Queue {
 
     constructor(
-        private maxConcurrent: number = 1
+        private maxConcurrent = 1
     ) { }
 
-    private activeTasks: QueueTask<any>[] = [];
-    private tasks: QueueTask<any>[] = [];
+    private activeTasks: QueueTask[] = [];
+    private tasks: QueueTask[] = [];
 
     private async processTasks() {
 
         while (this.activeTasks.length < this.maxConcurrent && 0 < this.tasks.length) {
-            const qt: QueueTask<any> = this.tasks.splice(0, 1)[0];
+            const qt: QueueTask = this.tasks.splice(0, 1)[0];
             this.activeTasks.push(qt);
 
             await qt.callback();
@@ -25,9 +25,9 @@ class Queue {
 
     }
 
-    public async add<T>(task: Task<T>): Promise<T> {
+    public async add<T>(task: Task): Promise<T> {
         return new Promise<T>((resolve, reject) => {
-            const qt: QueueTask<T> = {
+            const qt: QueueTask = {
                 callback: async () => {
                     // Invoked when this task gets to the top of the queue.
                     try {
@@ -39,7 +39,7 @@ class Queue {
                 },
                 id: performance.now(),
                 task
-            }
+            };
 
             this.tasks.push(qt);
 

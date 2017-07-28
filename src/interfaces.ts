@@ -1,9 +1,9 @@
 
 
-interface QueueTask<T> {
+interface QueueTask {
     callback: QueueTaskCallback;
     id: number;
-    task: Task<T>;
+    task: Task;
 }
 
 interface QueueTaskCallback {
@@ -11,10 +11,10 @@ interface QueueTaskCallback {
 }
 
 interface TaskCallback {
-    <T>(task: Task<T>): Promise<T>;
+    <T>(task: Task): Promise<T>;
 }
 
-interface Task<T> {
+interface Task {
     callback: TaskCallback;
 }
 
