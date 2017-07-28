@@ -1,7 +1,7 @@
 {
   "name": "asqueue",
   "version": "0.0.1",
-  "description": "An async queue.",
+  "description": "An async queue. Pronounced 'askew.'",
   "scripts": {
     "build": "webpack"
   },
