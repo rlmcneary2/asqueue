@@ -25,14 +25,19 @@ class Queue {
 
     }
 
-    public async add<T>(task: Task): Promise<T> {
-        return new Promise<T>((resolve, reject) => {
+    /**
+     * Add a task to the Queue.
+     * @param {Task} task The task to be processed.
+     * @returns {Promise<T>} A Promise that resolves to the result of the task.
+     */
+    public async add<T>(task: Task<T>): Promise<T> {
+        return new Promise<any>((resolve, reject) => {
             const qt: QueueTask = {
                 callback: async () => {
                     // Invoked when this task gets to the top of the queue.
                     try {
                         const result = await task.callback(task);
-                        resolve(result as T);
+                        resolve(result);
                     } catch (err) {
                         reject(err);
                     }

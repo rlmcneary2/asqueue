@@ -1,21 +1,19 @@
 
 
-interface QueueTask {
+export interface QueueTask {
     callback: QueueTaskCallback;
     id: number;
-    task: Task;
+    task: Task<any>;
 }
 
-interface QueueTaskCallback {
+export interface QueueTaskCallback {
     (): void;
 }
 
-interface TaskCallback {
-    <T>(task: Task): Promise<T>;
+export interface TaskCallback<T> {
+    (task: Task<T>): Promise<T>;
 }
 
-interface Task {
-    callback: TaskCallback;
+export interface Task<T> {
+    callback: TaskCallback<T>;
 }
-
-export { Task, TaskCallback, QueueTask };

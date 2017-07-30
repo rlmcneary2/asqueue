@@ -44,7 +44,7 @@ module.exports = {
     output: {
         filename: "asqueue.js",
         library: "asqueue",
-        libraryTarget: "commonjs2",
+        libraryTarget: "umd",
         path: path.resolve(__dirname, _OUTPUT_DIR)
     },
     plugins: [
