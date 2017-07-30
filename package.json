@@ -1,6 +1,6 @@
 {
   "name": "asqueue",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "An async queue. Pronounced 'askew.'",
   "engines": {
     "node": ">=7.6.0"

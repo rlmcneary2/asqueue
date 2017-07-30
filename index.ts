@@ -1,4 +1,5 @@
 import Queue from "./src/queue";
+import { Task, TaskCallback } from "./src/interfaces";
 
 
-export { Queue };
+export { Queue, Task, TaskCallback };
