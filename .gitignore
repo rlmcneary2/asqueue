@@ -48,7 +48,7 @@ Temporary Items
 .vscode/**
 !.vscode/launch.json
 !.vscode/settings.json
-dist
+dist/lib
 
 
 node_modules/
