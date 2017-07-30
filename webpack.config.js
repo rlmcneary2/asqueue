@@ -6,7 +6,7 @@ const webpack = require("webpack");
 
 
 const _SOURCE_DIR = "src";
-const _OUTPUT_DIR = "dist";
+const _OUTPUT_DIR = "dist/lib";
 
 
 /**
@@ -42,7 +42,9 @@ module.exports = {
             }]
     },
     output: {
-        filename: "index.js",
+        filename: "asqueue.js",
+        library: "asqueue",
+        libraryTarget: "commonjs2",
         path: path.resolve(__dirname, _OUTPUT_DIR)
     },
     plugins: [
