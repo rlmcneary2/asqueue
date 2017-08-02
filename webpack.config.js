@@ -1,6 +1,7 @@
 "use strict";
 
 
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const path = require("path");
 const webpack = require("webpack");
 
@@ -50,7 +51,8 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({ "process.env": { NODE_ENV: process.env.NODE_ENV } }),
-        new webpack.LoaderOptionsPlugin({ debug: true })
+        new webpack.LoaderOptionsPlugin({ debug: true }),
+        new BundleAnalyzerPlugin()
     ],
     resolve: {
         extensions: [".js", ".ts"] // Must include .js here to resolve files in node_modules.

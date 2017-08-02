@@ -6,8 +6,7 @@
     "node": ">=7.6.0"
   },
   "scripts": {
-    "build": "webpack",
-    "test": "npm run build && mocha --reporter spec"
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -39,6 +38,7 @@
     "tslint-eslint-rules": "^4.1.1",
     "typescript": "^2.4.2",
     "webpack": "^2.4.1",
+    "webpack-bundle-analyzer": "^2.8.3",
     "webpack-comment-remover-loader": "0.0.3"
   },
   "dependencies": {
