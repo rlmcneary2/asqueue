@@ -39,7 +39,8 @@ module.exports = {
                         }
                     }
                 ]
-            }]
+            }
+        ]
     },
     output: {
         filename: "asqueue.js",
