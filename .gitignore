@@ -48,7 +48,7 @@ Temporary Items
 .vscode/**
 !.vscode/launch.json
 !.vscode/settings.json
-dist/lib
+dist/
 
 
 node_modules/
@@ -70,3 +70,4 @@ src/app/view/viewFlow.json
 tmp
 ts-temp
 temp
+*.tgz

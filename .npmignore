@@ -1,0 +1,12 @@
+.awcache/
+.vscode/
+node_modules/
+src/
+test/
+*.tgz
+.npmignore
+index.ts
+tsconfig.json
+tslint.json
+webpack.config.js
+yarn.lock

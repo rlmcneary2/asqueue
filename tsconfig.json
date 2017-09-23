@@ -4,6 +4,7 @@
         "allowJs": false,
         "allowSyntheticDefaultImports": false, // This must be false for the React imports to work at both build and run times.
         "alwaysStrict": true,
+        "declaration": true,
         "inlineSources": false,
         "lib": [
             "dom",
@@ -17,12 +18,12 @@
         "noImplicitAny": false,
         "noUnusedLocals": true,
         "noUnusedParameters": false,
-        "outDir": "./temp",
+        "outDir": "./dist",
         "preserveConstEnums": true,
         "removeComments": false,
         "sourceMap": true,
         "suppressImplicitAnyIndexErrors": false,
-        "target": "es2017",
+        "target": "es5",
         "types":["node"]
     },
     "exclude": [

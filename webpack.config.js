@@ -7,7 +7,7 @@ const webpack = require("webpack");
 
 
 const _SOURCE_DIR = "src";
-const _OUTPUT_DIR = "dist/lib";
+const _OUTPUT_DIR = "dist";
 
 
 /**
@@ -31,10 +31,10 @@ module.exports = {
                         loader: "awesome-typescript-loader",
                         options: {
                             useBabel: true,
-                            useCache: true,
+                            useCache: false,
                             babelOptions: {
                                 plugins: [["transform-runtime", { helpers: false, moduleName: "babel-runtime" }]],
-                                presets: ["es2015", "es2016", "es2017"],
+                                presets: [["es2015", { modules: false }], "es2016", "es2017"],
                                 retainLines: true,
                             }
                         }
@@ -44,15 +44,13 @@ module.exports = {
         ]
     },
     output: {
-        filename: "asqueue.js",
-        library: "asqueue",
-        libraryTarget: "umd",
+        filename: "index.js",
         path: path.resolve(__dirname, _OUTPUT_DIR)
     },
     plugins: [
         new webpack.DefinePlugin({ "process.env": { NODE_ENV: process.env.NODE_ENV } }),
-        new webpack.LoaderOptionsPlugin({ debug: true }),
-        new BundleAnalyzerPlugin()
+        new webpack.LoaderOptionsPlugin({ debug: true })/*,
+        new BundleAnalyzerPlugin()*/
     ],
     resolve: {
         extensions: [".js", ".ts"] // Must include .js here to resolve files in node_modules.
