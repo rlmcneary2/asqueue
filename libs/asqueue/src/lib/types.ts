@@ -1,5 +1,21 @@
-export interface AddOptions {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+export interface AddToQueueOptions {
   id?: string;
+}
+
+/**
+ * Returned when a task is added to the queue.
+ * @template R The type of the queued task's result.
+ */
+export interface AddToQueueResult<R> {
+  cancel: TaskCancel;
+
+  /** A promise that resolves once the task has: been canceled, completed or
+   * thrown an exception. */
+  taskCompletion: Promise<
+    TaskCancelResult | TaskCompleteResult<R> | TaskErrorResult
+  >;
 }
 
 export interface CreateOptions {
@@ -8,24 +24,24 @@ export interface CreateOptions {
 }
 
 export interface Queue {
-  add: <T, C = unknown>(task: Task, options?: AddOptions) => Result<T, C>;
+  /**
+   * Add a task to the queue.
+   * @param task The task to invoke.
+   * @param options Information about the task and its processing.
+   * @returns An AddToQueueResult instance with properties and functions to
+   * alter the task and wait for completion.
+   */
+  add: <R = unknown>(
+    task: Task<R>,
+    options?: AddToQueueOptions
+  ) => AddToQueueResult<R>;
+
   pause: (pause: boolean) => void;
 }
 
 export interface QueueTask {
   id?: string;
-  task: () => void;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface Result<T, C = undefined> {
-  cancel: ResultCancel;
-  wait: Promise<T | WaitCancel<C> | void>;
-}
-
-export interface ResultCancel {
-  (): void;
-  <C>(data: C): void;
+  task: () => Promise<void>;
 }
 
 export interface State {
@@ -33,21 +49,29 @@ export interface State {
   pause: boolean;
 }
 
-// export type Task = () => Promise<void>;
-// export type Task<T> = Task & (() => Promise<T>);
-
-// export interface Task<T> extends Task {
-//   (): Promise<T>;
-// }
-export interface Task {
-  // <T>(): Promise<T>;
-  <T>(): Promise<T>;
-  // (): Promise<void>;
+export interface Task<R = unknown> {
+  (): Promise<R>;
 }
 
-export type Task2 = <T>() => Promise<T>;
+export interface TaskCancel {
+  (data?: any): void;
+}
 
-export interface WaitCancel<C = undefined> {
-  cancelled: boolean;
-  data: C;
+export interface TaskCancelResult extends TaskResult {
+  data: any;
+  status: "cancel";
+}
+
+export interface TaskCompleteResult<R> extends TaskResult {
+  status: "complete";
+  result: R;
+}
+
+export interface TaskErrorResult extends TaskResult {
+  error: any;
+  status: "error";
+}
+
+export interface TaskResult {
+  status: "cancel" | "complete" | "error";
 }
