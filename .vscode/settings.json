@@ -1,13 +1,3 @@
-// Place your settings in this file to overwrite default and user settings.
 {
-    "files.exclude": {
-        "**/.git": true,
-        "**/.DS_Store": true,
-        ".awcache": true,
-        ".vscode": true,
-        "dist": true,
-        "node_modules": true,
-        "npm-debug.log": true,
-        "yarn-error.log": true,
-    },
+  "cSpell.words": ["asqueue"]
 }

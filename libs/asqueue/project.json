@@ -1,0 +1,34 @@
+{
+  "root": "libs/asqueue",
+  "sourceRoot": "libs/asqueue/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/node:package",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/asqueue",
+        "tsConfig": "libs/asqueue/tsconfig.lib.json",
+        "packageJson": "libs/asqueue/package.json",
+        "main": "libs/asqueue/src/index.ts",
+        "assets": []
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/asqueue/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/asqueue"],
+      "options": {
+        "jestConfig": "libs/asqueue/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
