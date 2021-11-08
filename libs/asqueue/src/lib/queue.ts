@@ -1,17 +1,18 @@
 import {
+  AddMiddleware,
   AddToQueueOptions,
   AddToQueueResult,
+  AddToQueueResultNotAdded,
+  BeforeAddMiddleware,
   CreateOptions,
   Queue,
   QueueTask,
   State,
   Task,
   TaskCancel,
-  TaskCompleteResult,
-  TaskErrorResult,
   TaskCancelResult,
-  AddToQueueResultNotAdded,
-  BeforeAddMiddleware
+  TaskCompleteResult,
+  TaskErrorResult
 } from "./types";
 import { process } from "./process";
 
@@ -20,11 +21,11 @@ export function create(createOptions?: CreateOptions): Readonly<Queue> {
     ...createOptions,
     pause: createOptions?.pause === true,
     active: false,
-    middleware: { "before-add": [] },
+    middleware: { add: null, "before-add": [] },
     queue: new Set<QueueTask>()
   };
 
-  const result: Queue = {
+  const queueInstance: Queue = {
     add: <R>(task: Task<R>, options?: AddToQueueOptions) =>
       add(state, task, options),
 
@@ -39,16 +40,20 @@ export function create(createOptions?: CreateOptions): Readonly<Queue> {
     },
 
     set: (name, ...middleware) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      state.middleware[name].push(...(middleware as any[]));
-      return result;
+      if (name === "add") {
+        state.middleware.add = middleware[0] as AddMiddleware;
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        state.middleware[name].push(...(middleware as any[]));
+      }
+
+      return queueInstance;
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (result as any).queue = state.queue;
+  Object.defineProperty(queueInstance, "queue", { get: () => state.queue });
 
-  return Object.freeze(result);
+  return Object.freeze(queueInstance);
 }
 
 function add<R>(
@@ -136,10 +141,15 @@ function add<R>(
       }
     };
 
-    state.queue.add({
-      ...options,
-      task: taskWrapper
-    });
+    // By default the queue is FIFO.
+    if (!state.middleware.add) {
+      state.queue.add({
+        ...options,
+        task: taskWrapper
+      });
+    } else {
+      state.queue = state.middleware.add(state.queue, taskWrapper, options);
+    }
 
     process(state.queue, state);
   });

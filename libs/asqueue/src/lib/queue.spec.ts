@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  AddMiddleware,
+  AddToQueueOptionsPriorityItem,
+  AddToQueueResult
+} from "./types";
 import { create } from "./queue";
-import { AddToQueueResult } from "./types";
+import { insertPriorityTask } from "./middleware/add";
 
 describe("asqueue", () => {
   it("creates a queue", () => {
@@ -8,7 +13,6 @@ describe("asqueue", () => {
     expect(q).toEqual({
       add: expect.any(Function),
       pause: expect.any(Function),
-      queue: new Set(),
       set: expect.any(Function)
     });
   });
@@ -82,5 +86,22 @@ describe("asqueue", () => {
 
     expect(results[0]).toEqual({ result: 1, status: "complete" });
     expect(results[1]).toEqual({ result: "two", status: "complete" });
+  });
+
+  it("updates the queue with AddMiddleware", async () => {
+    const middleware: AddMiddleware = insertPriorityTask;
+    const q = create({ pause: true }).set("add", middleware);
+
+    q.add(jest.fn(), { id: "1", priority: 1 } as AddToQueueOptionsPriorityItem);
+    q.add(jest.fn(), { id: "3", priority: 3 } as AddToQueueOptionsPriorityItem);
+    expect((q as any).queue.size).toBe(2);
+
+    q.add(jest.fn(), { id: "2", priority: 2 } as AddToQueueOptionsPriorityItem);
+    expect((q as any).queue.size).toBe(3);
+    expect([...(q as any).queue]).toEqual([
+      expect.objectContaining({ id: "1" }),
+      expect.objectContaining({ id: "2" }),
+      expect.objectContaining({ id: "3" })
+    ]);
   });
 });
