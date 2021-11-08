@@ -1,8 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+export interface AddMiddleware extends Omit<Middleware, "task"> {
+  (
+    queue: Set<QueueTask>,
+    taskWrapper: () => Promise<void>,
+    options?: AddToQueueOptions
+  ): Set<QueueTask>;
+}
+
 export interface AddToQueueOptions {
   /** An ID to identify a task. */
   id?: string;
+}
+
+/** Assign a priority to a task that will affect its location in the queue. Only
+ * taken into account if the AddMiddleware `insertPriorityTask` or similar has
+ * been provided.  */
+export interface AddToQueueOptionsPriorityItem extends AddToQueueOptions {
+  /**
+   * The priority of the task, lower values are higher priority. For example all
+   * priority = 1 tasks will be processed before priority = 5 tasks.
+   */
+  priority: number;
 }
 
 export interface AddToQueueOptionsUniqueItem extends AddToQueueOptions {
@@ -85,7 +104,12 @@ export interface Queue {
   /**
    * Set one or more middleware on the queue.
    */
-  set: (name: keyof State["middleware"], ...middleware: Middleware[]) => Queue;
+  set: QueueSet;
+}
+
+export interface QueueSet {
+  (name: "add", middleware: AddMiddleware): Queue;
+  (name: "before-add", ...middleware: Middleware[]): Queue;
 }
 
 export interface QueueTask extends AddToQueueOptions {
@@ -95,6 +119,7 @@ export interface QueueTask extends AddToQueueOptions {
 export interface State extends CreateOptions {
   active: boolean;
   middleware: {
+    add: AddMiddleware | null;
     /**
      * This middleware will be invoked before a task is added to the queue and
      * can be used to control which tasks are added and which are not.
