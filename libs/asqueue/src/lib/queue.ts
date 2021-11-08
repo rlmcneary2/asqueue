@@ -1,25 +1,32 @@
 import {
   AddToQueueOptions,
-  TaskCompleteResult,
+  AddToQueueResult,
   CreateOptions,
   Queue,
   QueueTask,
-  AddToQueueResult,
-  TaskCancel,
   State,
   Task,
+  TaskCancel,
+  TaskCompleteResult,
   TaskErrorResult,
-  TaskCancelResult
+  TaskCancelResult,
+  AddToQueueResultNotAdded,
+  BeforeAddMiddleware
 } from "./types";
 import { process } from "./process";
 
-export function create(options?: CreateOptions): Readonly<Queue> {
-  const queue = new Set<QueueTask>();
-  const state: State = { active: false, pause: options?.pause === true };
+export function create(createOptions?: CreateOptions): Readonly<Queue> {
+  const state: State = {
+    ...createOptions,
+    pause: createOptions?.pause === true,
+    active: false,
+    middleware: { "before-add": [] },
+    queue: new Set<QueueTask>()
+  };
 
-  return Object.freeze({
+  const result: Queue = {
     add: <R>(task: Task<R>, options?: AddToQueueOptions) =>
-      add(queue, state, task, options),
+      add(state, task, options),
 
     pause: pause => {
       if (pause) {
@@ -28,24 +35,46 @@ export function create(options?: CreateOptions): Readonly<Queue> {
       }
 
       state.pause = false;
-      process(queue, state);
+      process(state.queue, state);
     },
 
-    queue
-  });
+    set: (name, ...middleware) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      state.middleware[name].push(...(middleware as any[]));
+      return result;
+    }
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (result as any).queue = state.queue;
+
+  return Object.freeze(result);
 }
 
 function add<R>(
-  queue: Set<QueueTask>,
   state: State,
   task: Task<R>,
   options?: AddToQueueOptions
-): AddToQueueResult<R> {
+): AddToQueueResult<R> | AddToQueueResultNotAdded {
+  // Are there any uniqueTask functions that might prevent this task from being
+  // added to the queue?
+  if (state.middleware["before-add"].length) {
+    let reason: string | undefined;
+    for (const func of state.middleware[
+      "before-add"
+    ] as BeforeAddMiddleware[]) {
+      reason = func(state.queue, task, options);
+      if (reason) {
+        return { reason };
+      }
+    }
+  }
+
   // This is the initial `cancel` instance. This function instance might be
   // called in the small amount of time between when `add` returns and before
   // the cancel promise runs to set its own instance on `cancel`.
   let canceled = false;
-  let cancelData: any;
+  let cancelData: unknown;
   let cancel: TaskCancel = data => {
     canceled = true;
     cancelData = data;
@@ -92,9 +121,9 @@ function add<R>(
       }
 
       try {
-        console.log(`taskWrapper[${options?.id}]: before task.`);
-        const result = await task();
-        console.log(`taskWrapper[${options?.id}]: task result=`, result);
+        // console.log(`taskWrapper[${options?.id}]: before task.`);
+        const result = task();
+        // console.log(`taskWrapper[${options?.id}]: task result=`, result);
 
         if (canceled) {
           resolve({ status: "cancel", data: cancelData });
@@ -107,12 +136,12 @@ function add<R>(
       }
     };
 
-    queue.add({
-      id: options?.id,
+    state.queue.add({
+      ...options,
       task: taskWrapper
     });
 
-    process(queue, state);
+    process(state.queue, state);
   });
 
   const taskCompletion = Promise.race([cancelPromise, taskPromise]);
