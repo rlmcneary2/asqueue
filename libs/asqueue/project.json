@@ -4,13 +4,15 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nrwl/node:package",
+      "executor": "@nrwl/web:package",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/asqueue",
         "tsConfig": "libs/asqueue/tsconfig.lib.json",
-        "packageJson": "libs/asqueue/package.json",
-        "main": "libs/asqueue/src/index.ts",
+        "project": "libs/asqueue/package.json",
+        "entryFile": "libs/asqueue/src/index.ts",
+        "external": [],
+        "rollupConfig": "libs/asqueue/bundle-rollup.js",
         "assets": []
       }
     },
