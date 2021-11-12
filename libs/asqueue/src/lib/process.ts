@@ -16,11 +16,11 @@ export async function process(queue: Set<QueueTask>, state: State) {
   // console.log("process: begin. ", state);
 
   const item: QueueTask = queue.values().next().value;
-  queue.delete(item);
 
   // console.log("process: processing task. ", item);
-
   await item.task();
+
+  queue.delete(item);
 
   state.active = false;
 

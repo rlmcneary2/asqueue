@@ -13,7 +13,9 @@
         "entryFile": "libs/asqueue/src/index.ts",
         "external": [],
         "rollupConfig": "libs/asqueue/bundle-rollup.js",
-        "assets": []
+        "assets": [
+          { "glob": "libs/asqueue/README.md", "input": ".", "output": "." }
+        ]
       }
     },
     "lint": {

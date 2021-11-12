@@ -1,7 +1,11 @@
 # asqueue
 
-This library was generated with [Nx](https://nx.dev).
+A queue that processes tasks.
 
-## Running unit tests
+```ts
+import { create } from "asqueue";
 
-Run `nx test asqueue` to execute the unit tests via [Jest](https://jestjs.io).
+const queue = create();
+
+const taskActions = queue.add(() => console.log("task 1"));
+```
