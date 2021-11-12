@@ -127,7 +127,7 @@ function add<R>(
 
       try {
         // console.log(`taskWrapper[${options?.id}]: before task.`);
-        const result = task();
+        const result = await Promise.resolve(task());
         // console.log(`taskWrapper[${options?.id}]: task result=`, result);
 
         if (canceled) {

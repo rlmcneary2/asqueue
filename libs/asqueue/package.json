@@ -1,4 +1,14 @@
 {
+  "author": {
+    "name": "Richard L. McNeary II"
+  },
+  "bugs": "https://github.com/rlmcneary2/asqueue/issues",
+  "description": "A queue that processes tasks.",
+  "homepage": "https://github.com/rlmcneary2/asqueue/",
+  "keywords": [
+    "queue"
+  ],
   "name": "asqueue",
-  "version": "2.0.0"
+  "version": "2.1.0",
+  "license": "MIT"
 }
