@@ -11,6 +11,7 @@
     }
   ],
   "compilerOptions": {
+    "downlevelIteration": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitReturns": true,
