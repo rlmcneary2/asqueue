@@ -24,9 +24,9 @@ import { create } from "asqueue";
 const queue = create();
 ```
 
-There are some options available that affect the state of the queue. You can
+There are some options available that effect the state of the queue. You can
 start the queue "paused" so that it won't process any tasks that are added. To
-being processing tasks "unpause" the queue using the `pause` function.
+begin processing tasks "unpause" the queue using the `pause` function.
 
 ```ts
 const queue = create({ pause: true });
