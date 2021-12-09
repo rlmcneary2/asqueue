@@ -3,6 +3,7 @@ import {
   AddToQueueOptions,
   AddToQueueResult,
   AddToQueueResultNotAdded,
+  AsyncTask,
   BeforeAddMiddleware,
   CreateOptions,
   Queue,
@@ -26,7 +27,7 @@ export function create(createOptions?: CreateOptions): Readonly<Queue> {
   };
 
   const queueInstance: Queue = {
-    add: <R>(task: Task<R>, options?: AddToQueueOptions) =>
+    add: <R>(task: AsyncTask<R> | Task<R>, options?: AddToQueueOptions) =>
       add(state, task, options),
 
     pause: pause => {
@@ -58,7 +59,7 @@ export function create(createOptions?: CreateOptions): Readonly<Queue> {
 
 function add<R>(
   state: State,
-  task: Task<R>,
+  task: AsyncTask<R> | Task<R>,
   options?: AddToQueueOptions
 ): AddToQueueResult<R> | AddToQueueResultNotAdded {
   // Are there any uniqueTask functions that might prevent this task from being

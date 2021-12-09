@@ -46,6 +46,12 @@ export interface AddToQueueResultNotAdded {
   reason: string;
 }
 
+/** An asynchronous function that executes the task. The queue will wait for
+ * this task to resolve. */
+export interface AsyncTask<R = unknown> {
+  (): Promise<R>;
+}
+
 /**
  * These function will be invoked before a task is added to the queue.
  * @returns Undefined if the task should be added, otherwise a string reason
@@ -89,7 +95,7 @@ export interface Queue {
    * alter the task and wait for completion.
    */
   add: <R = unknown>(
-    task: Task<R>,
+    task: AsyncTask<R> | Task<R>,
     options?: AddToQueueOptions
   ) => AddToQueueResult<R> | AddToQueueResultNotAdded;
 
@@ -132,7 +138,7 @@ export interface State extends CreateOptions {
 }
 
 /** A synchronous function that executes the task. Note that a task can start an
- * asynchronous action, but it can not wai for that action to complete. */
+ * asynchronous action, but it can not wait for that action to complete. */
 export interface Task<R = unknown> {
   (): R;
 }
@@ -147,8 +153,8 @@ export interface TaskCancelResult extends TaskResult {
 }
 
 export interface TaskCompleteResult<R> extends TaskResult {
-  status: "complete";
   result: R;
+  status: "complete";
 }
 
 export interface TaskErrorResult extends TaskResult {

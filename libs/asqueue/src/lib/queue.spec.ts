@@ -104,4 +104,53 @@ describe("asqueue", () => {
       expect.objectContaining({ id: "3" })
     ]);
   });
+
+  it("serially processes async tasks", async () => {
+    const q = create({ pause: true });
+
+    const mock1 = jest.fn(
+      () => new Promise(resolve => setTimeout(() => resolve(1), 100))
+    );
+
+    let resolveTwo: (value: unknown) => void;
+    const mock2 = jest.fn(
+      () =>
+        new Promise(resolve => {
+          resolveTwo = resolve;
+        })
+    );
+
+    const addResults = [
+      q.add(mock1, {
+        id: "queues multiple tasks 1"
+      }) as AddToQueueResult<number>,
+      q.add(mock2, {
+        id: "queues multiple tasks 2"
+      }) as AddToQueueResult<string>
+    ];
+
+    q.pause(false);
+
+    let { taskCompletion } = addResults[0];
+    const resultOne = await taskCompletion;
+
+    console.log("TASK ONE COMPLETED.");
+
+    expect((q as any).queue.size).toBe(1);
+    expect(resultOne).toEqual({ result: 1, status: "complete" });
+
+    setTimeout(() => {
+      console.log("BEFORE RESOLVE.");
+      resolveTwo("two");
+      console.log("AFTER RESOLVE.");
+    }, 100);
+
+    ({ taskCompletion } = addResults[1]);
+    const resultTwo = await taskCompletion;
+
+    console.log("TASK TWO COMPLETED.");
+
+    expect((q as any).queue.size).toBe(0);
+    expect(resultTwo).toEqual({ result: "two", status: "complete" });
+  });
 });

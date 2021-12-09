@@ -17,8 +17,9 @@ export async function process(queue: Set<QueueTask>, state: State) {
 
   const item: QueueTask = queue.values().next().value;
 
-  // console.log("process: processing task. ", item);
+  // console.log("process: before task. ", item);
   await item.task();
+  // console.log("process: after task. ", item);
 
   queue.delete(item);
 
